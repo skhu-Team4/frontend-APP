@@ -1,38 +1,45 @@
 import 'package:flutter/material.dart';
-
+import 'package:go_router/go_router.dart';
 import 'recommand.dart';
-// recommand.dart 파일을 추가하여 추천 화면으로 이동
 
 class SearchPotatoes extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    // 현재 경로를 가져옵니다
+    final currentLocation =
+        GoRouter.of(context).routerDelegate.currentConfiguration.fullPath;
+
+    // 로그인 후 기본 경로 '/find-potatoes'가 선택된 상태로 시작
+    final currentIndex = currentLocation == '/find-potatoes'
+        ? 0
+        : currentLocation == '/main-chatting'
+            ? 1
+            : 2;
+
     return Scaffold(
       backgroundColor: const Color(0xFFFFF8EB), // 배경 색상
       body: Stack(
         children: [
-          // 뒤로 가기 버튼
           Positioned(
             top: 65,
             left: 16,
             child: IconButton(
               icon: const Icon(Icons.arrow_back, color: Colors.black),
               onPressed: () {
-                Navigator.pop(context);
+                context.go('/'); // 로그인 화면으로 돌아가기
               },
             ),
           ),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // 로고와 제목
               Padding(
                 padding: const EdgeInsets.only(top: 55),
                 child: Center(
                   child: Column(
                     children: [
                       const Image(
-                        image: AssetImage(
-                            'assets/images/Hotpotato.png'), // 로고 이미지 경로
+                        image: AssetImage('assets/images/Hotpotato.png'),
                         height: 70,
                       ),
                       const SizedBox(height: 10),
@@ -48,17 +55,15 @@ class SearchPotatoes extends StatelessWidget {
                   ),
                 ),
               ),
-              // 검색창 모양 (검색창처럼 버튼 스타일로 클릭 시 recommand.dart로 이동)
               Padding(
                 padding: const EdgeInsets.symmetric(
                     horizontal: 20.0, vertical: 16.0),
                 child: GestureDetector(
                   onTap: () {
-                    // 검색창 클릭 시 recommand.dart로 이동
                     Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => RecommandPage()),
-                    );
+                    ); // 추천 페이지로 이동
                   },
                   child: Container(
                     padding: const EdgeInsets.symmetric(
@@ -81,7 +86,6 @@ class SearchPotatoes extends StatelessWidget {
                   ),
                 ),
               ),
-              // 내 강의 텍스트
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20.0),
                 child: Text(
@@ -92,7 +96,6 @@ class SearchPotatoes extends StatelessWidget {
                   ),
                 ),
               ),
-              // 강좌 리스트
               Expanded(
                 child: ListView(
                   padding: EdgeInsets.symmetric(horizontal: 16),
@@ -110,25 +113,39 @@ class SearchPotatoes extends StatelessWidget {
           ),
         ],
       ),
-      // 하단 아이콘 버튼 부분
       bottomNavigationBar: BottomNavigationBar(
+        currentIndex: currentIndex, // 현재 선택된 탭 설정
+        onTap: (index) {
+          if (index == currentIndex) return; // 현재 선택된 탭 클릭 시 아무 작업도 안 함
+          switch (index) {
+            case 0:
+              context.go('/find-potatoes'); // 수업 추가 화면으로 이동
+              break;
+            case 1:
+              context.go('/main-chatting'); // 채팅 화면으로 이동
+              break;
+            case 2:
+              context.go('/my-page'); // 마이페이지로 이동
+              break;
+          }
+        },
         items: [
           BottomNavigationBarItem(
             icon: Icon(Icons.menu),
-            label: '',
+            label: '감자찾기',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.chat),
-            label: '',
+            label: '채팅리스트',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person),
-            label: '',
+            label: '마이페이지',
           ),
         ],
-        backgroundColor: Color(0xFFFFF8EB), // 하단 색상
-        selectedItemColor: Colors.black, // 선택된 아이템 색상
-        unselectedItemColor: Colors.grey, // 선택되지 않은 아이템 색상
+        backgroundColor: Color(0xFFFFF8EB), // 하단 바 색상
+        selectedItemColor: Colors.black, // 선택된 아이콘 색상
+        unselectedItemColor: Colors.grey, // 선택되지 않은 아이콘 색상
       ),
     );
   }
@@ -187,5 +204,3 @@ class CourseTile extends StatelessWidget {
     );
   }
 }
-
-// 추천 검색어 페이지 (recommand.dart)

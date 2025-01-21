@@ -107,7 +107,7 @@ class LoginScreen extends StatelessWidget {
                 ),
                 onPressed: () {
                   // 로그인 기능
-                  context.push('/find-potatoes');
+                  context.go('/find-potatoes');
                 },
                 child: const Text(
                   '로그인',
